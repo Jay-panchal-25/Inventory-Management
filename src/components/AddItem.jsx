@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import service from "../appwrite/method";
 import { ID } from "appwrite";
 
-const AddItem = ({ item }) => {
+function AddItem({ item }) {
   const [formData, setFormData] = useState({
     name: item?.name || "",
     quantity: item?.quantity || "",
@@ -12,6 +12,7 @@ const AddItem = ({ item }) => {
       : null,
     price: item?.price || "",
   });
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +36,8 @@ const AddItem = ({ item }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, quantity, itemImage, price } = formData;
+
+    setLoading(true); // Show loader
 
     try {
       let imageUrl = item?.itemImage; // Use existing URL if no new image
@@ -82,6 +85,8 @@ const AddItem = ({ item }) => {
     } catch (error) {
       console.error("Error during form submission:", error.response || error);
       alert("Failed to submit the form. Please try again.");
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
@@ -179,13 +184,20 @@ const AddItem = ({ item }) => {
                 ? "bg-green-500 hover:bg-green-600"
                 : "bg-blue-500 hover:bg-blue-600"
             }`}
+            disabled={loading} // Disable button during loading
           >
-            {item ? "Update Item" : "Add Item"}
+            {loading ? (
+              <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
+            ) : item ? (
+              "Update Item"
+            ) : (
+              "Add Item"
+            )}
           </button>
         </div>
       </form>
     </div>
   );
-};
+}
 
 export default AddItem;

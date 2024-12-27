@@ -11,6 +11,7 @@ import DashBoard from "./components/DashBoard.jsx";
 import AddItem from "./components/AddItem.jsx";
 import Stock from "./components/Stock.jsx";
 import ItemCard from "./components/ItemCard.jsx";
+import UpdateItem from "./components/UpdateItem.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/addItem",
         element: <AddItem />,
+      },
+      {
+        path: "/updateItem/:id",
+        element: <UpdateItem />,
       },
 
       {

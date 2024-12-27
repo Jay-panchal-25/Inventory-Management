@@ -34,12 +34,13 @@ export class DataBaseService {
     }
   }
 
-  async getItem(id) {
+  async getItem($id) {
+    console.log($id);
     try {
-      const result = await this.databases.listDocuments(
+      const result = await this.databases.getDocument(
         config.appwriteDatabaseId,
         config.appwriteItemCollectionId,
-        [id]
+        $id
       );
     } catch (error) {
       console.log("getItem error: " + error);
@@ -79,9 +80,9 @@ export class DataBaseService {
       console.log("Appwrite serive :: uploadFile :: error", error);
     }
   }
-  async deleteFile(fileId) {
+  async deleteFile(name) {
     try {
-      await this.bucket.deleteFile(config.appwriteBucketId, fileId);
+      await this.bucket.deleteFile(config.appwriteBucketId, name);
       return true;
     } catch (error) {
       console.log("Appwrite serive :: deleteFile :: error", error);
