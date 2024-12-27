@@ -8,7 +8,7 @@ function AddItem({ item }) {
     quantity: item?.quantity || "",
     itemImage: null,
     itemImagePreview: item?.itemImage
-      ? service.getFilePreview(item.itemImage) // Preview for existing image
+      ? service.getFilePreview(item.$id) // Preview for existing image
       : null,
     price: item?.price || "",
   });

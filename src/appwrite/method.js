@@ -42,6 +42,7 @@ export class DataBaseService {
         config.appwriteItemCollectionId,
         $id
       );
+      return result;
     } catch (error) {
       console.log("getItem error: " + error);
       throw error;

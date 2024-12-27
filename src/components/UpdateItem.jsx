@@ -4,20 +4,19 @@ import service from "../appwrite/method";
 import AddItem from "./AddItem";
 
 function UpdateItem() {
-  const { $id } = useParams();
+  const $id = useParams();
   const [item, setItem] = useState();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    service.getItem($id).then((item) => {
+    service.getItem($id.id).then((item) => {
+      console.log(item);
       if (item) {
         setItem(item);
-      } else {
-        navigate("/stock");
       }
     });
-  }, [$id, navigate]);
+  }, [$id.id, navigate]);
 
   return item ? (
     <div className="py-8">
