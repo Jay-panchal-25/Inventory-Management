@@ -13,6 +13,7 @@ export class DataBaseService {
   async addItem({ name, quantity, itemImage, itemId, price }) {
     quantity = parseInt(quantity);
     price = parseInt(price);
+
     try {
       const result = await this.databases.createDocument(
         config.appwriteDatabaseId,
@@ -50,6 +51,8 @@ export class DataBaseService {
   }
 
   async updateItem(id, { name, quantity, itemImage, itemId, price }) {
+    quantity = parseInt(quantity);
+    price = parseInt(price);
     try {
       const result = await this.databases.updateDocument(
         config.appwriteDatabaseId,
@@ -71,6 +74,7 @@ export class DataBaseService {
     }
   }
   async uploadFile(file) {
+    console.log("file", file);
     try {
       return await this.bucket.createFile(
         config.appwriteBucketId,
@@ -82,8 +86,10 @@ export class DataBaseService {
     }
   }
   async deleteFile(name) {
+    const newName = name.replace(/[^a-zA-Z0-9]/g, "_");
+    console.log("it is item image " + newName);
     try {
-      await this.bucket.deleteFile(config.appwriteBucketId, name);
+      await this.bucket.deleteFile(config.appwriteBucketId, newName);
       return true;
     } catch (error) {
       console.log("Appwrite serive :: deleteFile :: error", error);

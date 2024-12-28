@@ -11,7 +11,6 @@ function UpdateItem() {
 
   useEffect(() => {
     service.getItem($id.id).then((item) => {
-      console.log(item);
       if (item) {
         setItem(item);
       }

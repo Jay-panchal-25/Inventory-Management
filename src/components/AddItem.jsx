@@ -43,23 +43,25 @@ function AddItem({ item }) {
       let imageUrl = item?.itemImage; // Use existing URL if no new image
 
       if (itemImage) {
-        // Upload the new image
+        console.log("uploading image" + itemImage);
+
         const uploadedImage = await service.uploadFile(itemImage);
         imageUrl = service.getFilePreview(uploadedImage.$id); // Get file preview URL
 
         // Delete the old image if the item exists
         if (item && item.itemImage) {
-          await service.deleteFile(item.itemImage);
+          await service.deleteFile(itemImage.name);
         }
       }
 
       if (item) {
         // Update an existing item
-        await service.updateItem(item.id, {
+        await service.updateItem(item.$id, {
           name,
           quantity,
           itemImage: imageUrl, // Save URL in the database
           price,
+          itemId: item.itemId,
         });
         alert("Item updated successfully!");
       } else {
