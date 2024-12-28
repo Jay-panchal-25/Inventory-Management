@@ -12,6 +12,7 @@ import AddItem from "./components/AddItem.jsx";
 import Stock from "./components/Stock.jsx";
 import ItemCard from "./components/ItemCard.jsx";
 import UpdateItem from "./components/UpdateItem.jsx";
+import Logout from "./components/Logout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/itemCard",
         element: <ItemCard />,
+      },
+      {
+        path: "/logout",
+        element: <Logout />,
       },
     ],
   },

@@ -13,24 +13,8 @@ function Header() {
             MyInventory
           </Link>
         </div>
-        <nav className="hidden md:flex space-x-6">
-          <Link to="/dashboard" className="hover:text-gray-300">
-            Dashboard
-          </Link>
-          <Link to="/addItem" className="hover:text-gray-300">
-            Add Item
-          </Link>
-          <Link to="/stock" className="hover:text-gray-300">
-            Stock & Items
-          </Link>
-          <Link to="/orders" className="hover:text-gray-300">
-            Order List
-          </Link>
-          <Link to="/" className="hover:text-gray-300">
-            Logout
-          </Link>
-        </nav>
-        {/* {isLoggedIn ? (
+
+        {isLoggedIn ? (
           <nav className="hidden md:flex space-x-6">
             <Link to="/dashboard" className="hover:text-gray-300">
               Dashboard
@@ -44,7 +28,7 @@ function Header() {
             <Link to="/orders" className="hover:text-gray-300">
               Order List
             </Link>
-            <Link to="/" className="hover:text-gray-300">
+            <Link to="/logout" className="hover:text-gray-300">
               Logout
             </Link>
           </nav>
@@ -57,7 +41,7 @@ function Header() {
               Signup
             </Link>
           </nav>
-        )} */}
+        )}
       </div>
     </header>
   );
