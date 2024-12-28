@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import service from "../appwrite/method";
 import { ID } from "appwrite";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function AddItem({ item }) {
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
     name: item?.name || "",
     quantity: item?.quantity || "",
@@ -12,6 +16,7 @@ function AddItem({ item }) {
       : null,
     price: item?.price || "",
   });
+
   const [loading, setLoading] = useState(false); // Loading state
 
   const handleChange = (e) => {
@@ -93,112 +98,116 @@ function AddItem({ item }) {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">
-        {item ? "Update Item" : "Add New Item"}
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-600"
-          >
-            Item Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="quantity"
-            className="block text-sm font-medium text-gray-600"
-          >
-            Quantity
-          </label>
-          <input
-            type="number"
-            id="quantity"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            required
-            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="itemImage"
-            className="block text-sm font-medium text-gray-600"
-          >
-            Item Image
-          </label>
-          <input
-            type="file"
-            id="itemImage"
-            name="itemImage"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          {formData.itemImagePreview && (
-            <div className="mt-4">
-              <img
-                src={formData.itemImagePreview}
-                alt="Item Preview"
-                className="w-32 h-32 object-cover rounded-md"
+    <>
+      {isLoggedIn ? (
+        <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">
+            {item ? "Update Item" : "Add New Item"}
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-600"
+              >
+                Item Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
-          )}
-        </div>
 
-        <div>
-          <label
-            htmlFor="price"
-            className="block text-sm font-medium text-gray-600"
-          >
-            Price
-          </label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            required
-            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
+            <div>
+              <label
+                htmlFor="quantity"
+                className="block text-sm font-medium text-gray-600"
+              >
+                Quantity
+              </label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleChange}
+                required
+                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
 
-        <div className="flex justify-center mt-6">
-          <button
-            type="submit"
-            className={`px-6 py-2 rounded-md text-white focus:outline-none ${
-              item
-                ? "bg-green-500 hover:bg-green-600"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-            disabled={loading} // Disable button during loading
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
-            ) : item ? (
-              "Update Item"
-            ) : (
-              "Add Item"
-            )}
-          </button>
+            <div>
+              <label
+                htmlFor="itemImage"
+                className="block text-sm font-medium text-gray-600"
+              >
+                Item Image
+              </label>
+              <input
+                type="file"
+                id="itemImage"
+                name="itemImage"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              {formData.itemImagePreview && (
+                <div className="mt-4">
+                  <img
+                    src={formData.itemImagePreview}
+                    alt="Item Preview"
+                    className="w-32 h-32 object-cover rounded-md"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="price"
+                className="block text-sm font-medium text-gray-600"
+              >
+                Price
+              </label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                required
+                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            <div className="flex justify-center mt-6">
+              <button
+                type="submit"
+                className={`px-6 py-2 rounded-md text-white focus:outline-none ${
+                  item
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }`}
+                disabled={loading} // Disable button during loading
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
+                ) : item ? (
+                  "Update Item"
+                ) : (
+                  "Add Item"
+                )}
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      ) : null}
+    </>
   );
 }
 

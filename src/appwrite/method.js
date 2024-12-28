@@ -9,7 +9,6 @@ export class DataBaseService {
   databases = new Databases(this.client);
   bucket = new Storage(this.client);
 
-  // Add item to the database
   async addItem({ name, quantity, itemImage, itemId, price }) {
     quantity = parseInt(quantity);
     price = parseInt(price);
@@ -32,21 +31,6 @@ export class DataBaseService {
     } catch (error) {
       console.log("addItem error: " + error);
       throw error; // Rethrow error to be handled by the caller
-    }
-  }
-
-  async getItem($id) {
-    console.log($id);
-    try {
-      const result = await this.databases.getDocument(
-        config.appwriteDatabaseId,
-        config.appwriteItemCollectionId,
-        $id
-      );
-      return result;
-    } catch (error) {
-      console.log("getItem error: " + error);
-      throw error;
     }
   }
 
@@ -73,6 +57,49 @@ export class DataBaseService {
       throw error;
     }
   }
+
+  async deleteItem(itemId) {
+    try {
+      const result = await this.databases.deleteDocument(
+        config.appwriteDatabaseId,
+        config.appwriteItemCollectionId,
+        itemId
+      );
+      console.log("Item deleted successfully:", result);
+      return result;
+    } catch (error) {
+      console.log("deleteItem error: " + error);
+      throw error;
+    }
+  }
+
+  async getItem($id) {
+    console.log($id);
+    try {
+      const result = await this.databases.getDocument(
+        config.appwriteDatabaseId,
+        config.appwriteItemCollectionId,
+        $id
+      );
+      return result;
+    } catch (error) {
+      console.log("getItem error: " + error);
+      throw error;
+    }
+  }
+
+  async getAllItems() {
+    try {
+      return await this.databases.listDocuments(
+        config.appwriteDatabaseId,
+        config.appwriteItemCollectionId // Omit the queries parameter if not needed
+      );
+    } catch (error) {
+      console.log("Appwrite service :: GetPosts :: error", error);
+      return false;
+    }
+  }
+
   async uploadFile(file) {
     console.log("file", file);
     try {
@@ -97,40 +124,12 @@ export class DataBaseService {
     }
   }
 
-  async getAllItems() {
-    try {
-      return await this.databases.listDocuments(
-        config.appwriteDatabaseId,
-        config.appwriteItemCollectionId // Omit the queries parameter if not needed
-      );
-    } catch (error) {
-      console.log("Appwrite service :: GetPosts :: error", error);
-      return false;
-    }
-  }
-
   getFilePreview(fileId) {
     try {
       return this.bucket.getFilePreview(config.appwriteBucketId, fileId);
     } catch (error) {
       throw error;
       return false;
-    }
-  }
-
-  // Delete an item from the database
-  async deleteItem(itemId) {
-    try {
-      const result = await this.databases.deleteDocument(
-        config.appwriteDatabaseId,
-        config.appwriteItemCollectionId,
-        itemId
-      );
-      console.log("Item deleted successfully:", result);
-      return result;
-    } catch (error) {
-      console.log("deleteItem error: " + error);
-      throw error;
     }
   }
 }
