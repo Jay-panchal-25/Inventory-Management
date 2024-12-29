@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import service from "../appwrite/method";
 import ItemCard from "./ItemCard";
+import { useSelector } from "react-redux";
 
 function Stock() {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true); // Track loading state
-  const [error, setError] = useState(null); // Track errors
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
-  // Function to fetch items
   const fetchItems = async () => {
-    setLoading(true); // Start loading
-    setError(null); // Clear previous errors
+    setLoading(true);
+    setError(null);
     try {
       const result = await service.getAllItems();
 
       if (result) {
-        setItems(result.documents); // Set items if data is fetched successfully
+        setItems(result.documents);
       } else {
         setError("Failed to fetch items.");
       }
@@ -29,7 +30,7 @@ function Stock() {
 
   // Delete item locally
   const handleDelete = (id) => {
-    setItems((prevItems) => prevItems.filter((item) => item.$id !== id)); // Remove deleted item from state
+    setItems((prevItems) => prevItems.filter((item) => item.$id !== id));
   };
 
   useEffect(() => {
@@ -41,7 +42,7 @@ function Stock() {
       <div className="flex justify-center items-center h-screen">
         <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin" />
       </div>
-    ); // Show a loading spinner while fetching
+    );
   }
 
   if (error) {
@@ -49,23 +50,26 @@ function Stock() {
       <div className="text-center text-red-500">
         <p>Error: {error}</p>
       </div>
-    ); // Show error message if there's an issue
+    );
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold pb-4">
-        Total Items: {items.length}
-      </h2>
-      <div className="flex flex-wrap">
-        {items.map((item) => (
-          // Increment count when a new item is added
-          <div key={item.$id} className="p-5">
-            <ItemCard item={item} onDelete={handleDelete} />
+    <>
+      {isLoggedIn ? (
+        <div className="p-4">
+          <h2 className="text-xl font-semibold pb-4">
+            Total Items: {items.length}
+          </h2>
+          <div className="flex flex-wrap">
+            {items.map((item) => (
+              <div key={item.$id} className="p-5">
+                <ItemCard item={item} onDelete={handleDelete} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      ) : null}
+    </>
   );
 }
 

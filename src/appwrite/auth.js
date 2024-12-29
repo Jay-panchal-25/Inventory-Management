@@ -20,7 +20,6 @@ export class AuthService {
         ID.unique(),
         email,
         password,
-
         name
       );
       if (userAccount) {

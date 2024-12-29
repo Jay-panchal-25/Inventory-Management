@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function Header() {
-  const { isLoggedIn } = useSelector((state) => state.auth); // Get the isLoggedIn state from redux store
+  const { isLoggedIn, role } = useSelector((state) => state.auth); // Get the isLoggedIn state from redux store
 
   return (
     <header className="bg-gray-800 text-white">
@@ -27,6 +27,9 @@ function Header() {
             </Link>
             <Link to="/orders" className="hover:text-gray-300">
               Order List
+            </Link>
+            <Link to="/userList" className="hover:text-gray-300">
+              User List
             </Link>
             <Link to="/logout" className="hover:text-gray-300">
               Logout

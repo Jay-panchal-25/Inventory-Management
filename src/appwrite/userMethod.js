@@ -64,6 +64,18 @@ class userMethod {
       throw error;
     }
   }
+
+  async getAllUser() {
+    try {
+      return await this.databases.listDocuments(
+        config.appwriteDatabaseId,
+        config.appwriteUserCollectionId // Omit the queries parameter if not needed
+      );
+    } catch (error) {
+      console.log("Appwrite service :: GetPosts :: error", error);
+      return false;
+    }
+  }
 }
 const userService = new userMethod();
 export default userService;
