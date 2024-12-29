@@ -1,27 +1,50 @@
 import { createSlice } from "@reduxjs/toolkit";
+import authService from "../appwrite/auth";
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null, // Stores the user data
-    isLoggedIn: false, // Tracks login state
+    user: null,
+    isLoggedIn: false,
+    role: null,
   },
   reducers: {
     login: (state, action) => {
-      const { email, password } = action.payload;
+      const { email, password, users } = action.payload;
 
-      // Example validation: Replace with your backend/API logic
-      if (email === "admin@example.com" && password === "password123") {
-        state.user = { email };
+      // Hardcoded admin details
+      const admin = {
+        email: "admin@example.com",
+        password: "password123",
+        role: "admin",
+      };
+
+      if (email === admin.email && password === admin.password) {
+        // Admin login logic
+        state.user = { email: admin.email, role: admin.role };
         state.isLoggedIn = true;
+        state.role = "admin";
+        console.log("Admin login successful");
       } else {
-        state.user = null;
-        state.isLoggedIn = false;
+        // Regular user login logic
+        const user = authService.getCurrentUser();
+        if (user) {
+          state.user = { name: user.name, email: user.email, role: "user" };
+          state.isLoggedIn = true;
+          state.role = "user";
+          console.log("User login successful");
+        } else {
+          // Invalid credentials
+          state.user = null;
+          state.isLoggedIn = false;
+          state.role = null;
+        }
       }
     },
     logout: (state) => {
       state.user = null;
       state.isLoggedIn = false;
+      state.role = null;
     },
   },
 });

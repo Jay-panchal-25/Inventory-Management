@@ -8,6 +8,7 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState(""); // Address field
+
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,17 +19,17 @@ const SignupPage = () => {
     setError("");
 
     try {
-      // Create account with email, password, name, and address
-      const userData = await authService.createAccount({
-        email,
-        password,
-        // Pass address to backend
-      });
-      userService.addUser({
+      await authService.createAccount({
         name,
         email,
         password,
+      });
+
+      const userData = await userService.addUser({
+        name,
+        email,
         address,
+        password,
       });
 
       if (userData) {
@@ -116,6 +117,8 @@ const SignupPage = () => {
               <option value="Vadodara">Vadodara</option>
             </select>
           </div>
+          {/* Role selection */}
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
