@@ -14,6 +14,8 @@ import ItemCard from "./components/ItemCard.jsx";
 import UpdateItem from "./components/UpdateItem.jsx";
 import Logout from "./components/Logout.jsx";
 import UserList from "./components/UserList.jsx";
+import UserCart from "./components/UserCart.jsx";
+import UserProfile from "./components/UserProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +58,14 @@ const router = createBrowserRouter([
       {
         path: "/userList",
         element: <UserList />,
+      },
+      {
+        path: "/userCart",
+        element: <UserCart />,
+      },
+      {
+        path: "/userProfile",
+        element: <UserProfile />,
       },
     ],
   },

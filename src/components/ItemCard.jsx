@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { FaEdit, FaTrashAlt, FaShoppingCart } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import service from "../appwrite/method";
 import { Link } from "react-router-dom";
+import { addToCart } from "../store/itemSlice";
 
 function ItemCard({ item, onUpdate, onDelete }) {
+  const dispatch = useDispatch();
   const { role, isLoggedIn } = useSelector((state) => state.auth);
 
   const { $id, itemImage, name, price, quantity, itemId } = item;
@@ -22,6 +24,9 @@ function ItemCard({ item, onUpdate, onDelete }) {
       console.error("Error deleting item:", error);
       alert("An error occurred while deleting the item.");
     }
+  };
+  const handleAddToCart = () => {
+    dispatch(addToCart(item));
   };
 
   return (
@@ -63,12 +68,14 @@ function ItemCard({ item, onUpdate, onDelete }) {
               </span>
             </>
           ) : (
-            <span
-              className="text-yellow-500 hover:text-yellow-600 cursor-pointer"
+            <button
+              className="flex items-center justify-center w-full px-4 py-2 bg-blue-700 text-white rounded shadow hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
               title="Add to Cart"
+              onClick={handleAddToCart}
             >
-              <FaShoppingCart size={40} />
-            </span>
+              <FaShoppingCart className="mr-2" size={20} />
+              Add to Cart
+            </button>
           )}
         </div>
       </div>
