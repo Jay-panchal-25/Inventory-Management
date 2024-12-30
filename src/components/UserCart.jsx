@@ -1,84 +1,143 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateQuantity, removeFromCart } from "../store/itemSlice"; // Adjust path as needed
 
 function UserCart() {
   const [selectedImage, setSelectedImage] = useState(null);
   const cartItems = useSelector((state) => state.cart.cartItems);
-  const [items, setItems] = useState(cartItems);
-  console.log(items);
-  // Function to decrease quantity for a specific item
+  const dispatch = useDispatch();
+
+  const handleIncrease = (id) => {
+    dispatch(updateQuantity({ itemId: id, change: 1 }));
+  };
+
+  const handleDecrease = (id) =>
+    dispatch(updateQuantity({ itemId: id, change: -1 }));
+
+  const handleRemove = (id) => {
+    dispatch(removeFromCart(id));
+  };
+
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">Cart Items</h2>
+    <div className="container mx-auto p-6">
+      <h2 className="text-4xl font-bold text-center mb-8">
+        Your Shopping Cart
+      </h2>
+
       {cartItems.length > 0 ? (
-        <>
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-4 py-2">Item</th>
-                <th className="border border-gray-300 px-4 py-2">Image</th>
-                <th className="border border-gray-300 px-4 py-2">Quantity</th>
-                <th className="border border-gray-300 px-4 py-2">Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cartItems.map((item) => (
-                <tr key={item.$id} className="hover:bg-gray-100">
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.name}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <img
-                      className="w-20 h-20 object-cover cursor-pointer"
-                      src={item.itemImage}
-                      alt={item.name}
-                      onClick={() => setSelectedImage(item.itemImage)}
-                    />
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <div className="flex items-center space-x-4">
-                      <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
-                        -
-                      </button>
-
-                      <span className="text-lg font-semibold">
-                        {item.quantity}
-                      </span>
-                      <button className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    ₹{item.price}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Modal for full image */}
-          {selectedImage && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white p-4 rounded shadow-lg">
-                <button
-                  className="text-red-500 float-right font-bold text-lg"
-                  onClick={() => setSelectedImage(null)}
-                >
-                  X
-                </button>
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Cart Items Section */}
+          <div className="lg:col-span-2 space-y-6">
+            {cartItems.map((item) => (
+              <div
+                key={item.$id}
+                className="flex items-center bg-white shadow rounded-lg overflow-hidden p-4 space-x-6"
+              >
                 <img
-                  src={selectedImage}
-                  alt="Full view"
-                  className="max-w-full max-h-screen object-contain"
+                  className="w-20 h-20 object-cover cursor-pointer"
+                  src={item.itemImage || "/placeholder.png"}
+                  alt={item.name}
+                  onClick={() => setSelectedImage(item.itemImage)}
                 />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold">{item.name}</h3>
+                  <p className="text-gray-600">Price: ₹{item.price}</p>
+                  <div className="mt-2 flex items-center space-x-4">
+                    <button
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:bg-gray-300"
+                      onClick={() => handleDecrease(item.$id)}
+                      disabled={item.quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-semibold">
+                      {item.quantity}
+                    </span>
+                    <button
+                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                      onClick={() => handleIncrease(item.$id)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-semibold">
+                    ₹{item.price * item.quantity}
+                  </p>
+                  <button
+                    className="mt-2 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                    onClick={() => handleRemove(item.$id)}
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
+            ))}
+          </div>
+
+          {/* Bill Summary Section */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h3 className="text-2xl font-bold mb-4">Bill Summary</h3>
+            <div className="space-y-4">
+              {cartItems.map((item) => (
+                <div
+                  key={item.$id}
+                  className="flex justify-between text-gray-600"
+                >
+                  <span>{item.name}</span>
+                  <span>
+                    ₹{item.price} x {item.quantity}
+                  </span>
+                  <span>₹{item.price * item.quantity}</span>
+                </div>
+              ))}
             </div>
-          )}
-        </>
+
+            <div className="border-t mt-4 pt-4 text-lg font-semibold flex justify-between">
+              <span>Total Price:</span>
+              <span>₹{totalPrice}</span>
+            </div>
+
+            <button
+              className="w-full mt-6 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600"
+              onClick={() => alert("Proceeding to Checkout")}
+            >
+              Checkout
+            </button>
+          </div>
+        </div>
       ) : (
-        <p className="text-center text-gray-500">No items in the cart</p>
+        <p className="text-center text-gray-500">Your cart is empty</p>
+      )}
+
+      {/* Modal for full image */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-white p-4 rounded shadow-lg max-w-xl w-full">
+            <button
+              className="text-red-500 float-right font-bold text-lg"
+              onClick={() => setSelectedImage(null)}
+              aria-label="Close image modal"
+            >
+              X
+            </button>
+            <img
+              src={selectedImage}
+              alt="Full view"
+              className="w-full h-auto object-contain mt-4"
+            />
+          </div>
+        </div>
       )}
     </div>
   );

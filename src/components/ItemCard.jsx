@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import { FaEdit, FaTrashAlt, FaShoppingCart } from "react-icons/fa";
+import {
+  FaEdit,
+  FaTrashAlt,
+  FaShoppingCart,
+  FaMinusCircle,
+} from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import service from "../appwrite/method";
 import { Link } from "react-router-dom";
-import { addToCart } from "../store/itemSlice"; // Make sure this action is simple and sync or well handled
+import { addToCart, removeFromCart } from "../store/itemSlice"; // Add the removeFromCart action
 
 function ItemCard({ item, onUpdate, onDelete }) {
   const dispatch = useDispatch();
-  const { role, isLoggedIn } = useSelector((state) => state.auth);
-  const [loading, setLoading] = useState(false); // State for loading
+  const { role } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const [isInCart, setIsInCart] = useState(false); // Track if item is in the cart
 
   const { $id, itemImage, name, price, quantity, itemId } = item;
 
@@ -29,13 +35,27 @@ function ItemCard({ item, onUpdate, onDelete }) {
 
   // Function to handle Add to Cart
   const handleAddToCart = async () => {
-    setLoading(true); // Set loading state to true
+    setLoading(true);
     try {
-      await dispatch(addToCart(item)); // Dispatch the addToCart action
-      setLoading(false); // Set loading state to false after success
+      dispatch(addToCart(item)); // Dispatch the addToCart action
+      setIsInCart(true); // Mark the item as added to the cart
+      setLoading(false);
     } catch (error) {
       console.error("Error adding item to cart:", error);
-      setLoading(false); // Set loading state to false if error occurs
+      setLoading(false);
+    }
+  };
+
+  // Function to handle Remove from Cart
+  const handleRemoveFromCart = async () => {
+    setLoading(true);
+    try {
+      dispatch(removeFromCart()); // Dispatch the removeFromCart action
+      setIsInCart(false); // Mark the item as removed from the cart
+      setLoading(false);
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+      setLoading(false);
     }
   };
 
@@ -80,14 +100,23 @@ function ItemCard({ item, onUpdate, onDelete }) {
           ) : (
             <button
               className={`flex items-center justify-center w-full px-4 py-2 ${
-                loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-700"
-              } text-white rounded shadow hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2`}
-              title="Add to Cart"
-              onClick={handleAddToCart}
-              disabled={loading} // Disable button while loading
+                loading
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : isInCart
+                  ? "bg-red-700 hover:bg-red-800"
+                  : "bg-blue-700 hover:bg-blue-800"
+              } text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2`}
+              title={isInCart ? "Remove from Cart" : "Add to Cart"}
+              onClick={isInCart ? handleRemoveFromCart : handleAddToCart}
+              disabled={loading}
             >
               {loading ? (
-                <span>Adding...</span> // Show loading text
+                <span>{isInCart ? "Removing..." : "Adding..."}</span>
+              ) : isInCart ? (
+                <>
+                  <FaMinusCircle className="mr-1" size={20} />
+                  Remove from Cart
+                </>
               ) : (
                 <>
                   <FaShoppingCart className="mr-2" size={20} />
