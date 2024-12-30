@@ -10,7 +10,9 @@ const authSlice = createSlice({
   },
   reducers: {
     login: (state, action) => {
-      const { email, password, users } = action.payload;
+      const user = authService.getCurrentUser();
+
+      const { email, password } = action.payload;
 
       // Hardcoded admin details
       const admin = {
@@ -19,15 +21,16 @@ const authSlice = createSlice({
         role: "admin",
       };
 
-      if (email === admin.email && password === admin.password) {
+      if (user && email === "admin@example.com" && password === "password123") {
         // Admin login logic
-        state.user = { email: admin.email, role: admin.role };
+        state.user = { email: admin.email, role: "admin" };
         state.isLoggedIn = true;
         state.role = "admin";
+
         console.log("Admin login successful");
       } else {
         // Regular user login logic
-        const user = authService.getCurrentUser();
+
         if (user) {
           state.user = { name: user.name, email: user.email, role: "user" };
           state.isLoggedIn = true;

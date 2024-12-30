@@ -3,11 +3,12 @@ import { FaEdit, FaTrashAlt, FaShoppingCart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import service from "../appwrite/method";
 import { Link } from "react-router-dom";
-import { addToCart } from "../store/itemSlice";
+import { addToCart } from "../store/itemSlice"; // Make sure this action is simple and sync or well handled
 
 function ItemCard({ item, onUpdate, onDelete }) {
   const dispatch = useDispatch();
   const { role, isLoggedIn } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false); // State for loading
 
   const { $id, itemImage, name, price, quantity, itemId } = item;
 
@@ -25,8 +26,17 @@ function ItemCard({ item, onUpdate, onDelete }) {
       alert("An error occurred while deleting the item.");
     }
   };
-  const handleAddToCart = () => {
-    dispatch(addToCart(item));
+
+  // Function to handle Add to Cart
+  const handleAddToCart = async () => {
+    setLoading(true); // Set loading state to true
+    try {
+      await dispatch(addToCart(item)); // Dispatch the addToCart action
+      setLoading(false); // Set loading state to false after success
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      setLoading(false); // Set loading state to false if error occurs
+    }
   };
 
   return (
@@ -69,12 +79,21 @@ function ItemCard({ item, onUpdate, onDelete }) {
             </>
           ) : (
             <button
-              className="flex items-center justify-center w-full px-4 py-2 bg-blue-700 text-white rounded shadow hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
+              className={`flex items-center justify-center w-full px-4 py-2 ${
+                loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-700"
+              } text-white rounded shadow hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2`}
               title="Add to Cart"
               onClick={handleAddToCart}
+              disabled={loading} // Disable button while loading
             >
-              <FaShoppingCart className="mr-2" size={20} />
-              Add to Cart
+              {loading ? (
+                <span>Adding...</span> // Show loading text
+              ) : (
+                <>
+                  <FaShoppingCart className="mr-2" size={20} />
+                  Add to Cart
+                </>
+              )}
             </button>
           )}
         </div>

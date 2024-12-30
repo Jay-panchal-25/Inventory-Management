@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 function UserCart() {
   const [selectedImage, setSelectedImage] = useState(null);
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const [items, setItems] = useState(cartItems);
+  console.log(items);
+  // Function to decrease quantity for a specific item
+
   return (
     <div className="p-4">
       <h2 className="text-2xl font-semibold mb-4">Cart Items</h2>
@@ -33,7 +37,18 @@ function UserCart() {
                     />
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {item.quantity}
+                    <div className="flex items-center space-x-4">
+                      <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+                        -
+                      </button>
+
+                      <span className="text-lg font-semibold">
+                        {item.quantity}
+                      </span>
+                      <button className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                        +
+                      </button>
+                    </div>
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     ₹{item.price}

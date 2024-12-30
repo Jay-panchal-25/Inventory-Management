@@ -22,11 +22,6 @@ export class AuthService {
         password,
         name
       );
-      if (userAccount) {
-        return this.login({ email, password });
-      } else {
-        return userAccount;
-      }
     } catch (error) {
       console.error("Error creating account:", error);
       throw error;

@@ -13,13 +13,9 @@ const itemSlice = createSlice({
       const existingItem = state.cartItems.find(
         (item) => item.id === action.payload.id
       );
-      if (existingItem) {
-        // Update the quantity if the item exists
-        existingItem.quantity += 1;
-      } else {
-        // Add a new item to the cart
-        state.cartItems.push({ ...action.payload, quantity: 1 });
-      }
+
+      // Add a new item to the cart
+      state.cartItems.push({ ...action.payload, quantity: 1 });
     },
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(

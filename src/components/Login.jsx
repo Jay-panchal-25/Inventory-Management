@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { login as authLogin } from "../store/authSlice";
+import authService from "../appwrite/auth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       dispatch(authLogin({ email, password }));
+      authService.login({ email, password });
     } catch (err) {
       setError("Invalid credentials");
     }

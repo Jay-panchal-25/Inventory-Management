@@ -25,7 +25,7 @@ class userMethod {
       return result;
     } catch (error) {
       console.log("addUser error: " + error);
-      throw error; // Rethrow error to be handled by the caller
+      throw error;
     }
   }
 

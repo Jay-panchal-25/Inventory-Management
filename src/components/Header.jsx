@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -13,7 +13,6 @@ function Header() {
             MyInventory
           </Link>
         </div>
-
         {isLoggedIn ? (
           <nav className="hidden md:flex space-x-6">
             {role === "admin" && (
@@ -54,14 +53,16 @@ function Header() {
             </Link>
           </nav>
         ) : (
-          <nav className="hidden md:flex space-x-6">
-            <Link to="/login" className="hover:text-gray-300">
-              Login
-            </Link>
-            <Link to="/signup" className="hover:text-gray-300">
-              Signup
-            </Link>
-          </nav>
+          <>
+            <nav className="hidden md:flex space-x-6">
+              <Link to="/login" className="hover:text-gray-300">
+                Login
+              </Link>
+              <Link to="/signup" className="hover:text-gray-300">
+                Signup
+              </Link>
+            </nav>
+          </>
         )}
       </div>
     </header>
