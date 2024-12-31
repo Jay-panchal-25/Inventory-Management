@@ -7,13 +7,14 @@ class userMethod {
     .setProject(config.appwriteProjectId);
 
   databases = new Databases(this.client);
-
   async addUser({ name, address, email, password }) {
+    const docId = ID.unique();
     try {
       const result = await this.databases.createDocument(
         config.appwriteDatabaseId,
         config.appwriteUserCollectionId,
-        ID.unique(), // Generate a unique ID for the item
+        // Generate a unique ID for the item
+        docId,
         {
           name,
           address,
@@ -22,6 +23,7 @@ class userMethod {
         }
       );
       console.log("user added successfully:", result);
+      this.getUsers(docId);
       return result;
     } catch (error) {
       console.log("addUser error: " + error);
@@ -65,6 +67,20 @@ class userMethod {
     }
   }
 
+  async getUsers(docId) {
+    console.log("getUsers id", docId);
+    try {
+      return await this.databases.getDocument(
+        config.appwriteDatabaseId,
+        config.appwriteUserCollectionId,
+        docId // Omit the queries parameter if not needed
+      );
+    } catch (error) {
+      console.log("Appwrite service :: GetUsers :: error", error);
+      return false;
+    }
+  }
+
   async getAllUser() {
     try {
       return await this.databases.listDocuments(
@@ -72,7 +88,7 @@ class userMethod {
         config.appwriteUserCollectionId // Omit the queries parameter if not needed
       );
     } catch (error) {
-      console.log("Appwrite service :: GetPosts :: error", error);
+      console.log("Appwrite service :: GetAllUser :: error", error);
       return false;
     }
   }
