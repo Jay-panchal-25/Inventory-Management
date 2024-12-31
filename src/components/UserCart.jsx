@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateQuantity, removeFromCart } from "../store/itemSlice"; // Adjust path as needed
 
-function UserCart() {
+function UserCart({ users }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
+  console.log("Users passed to UserCart:", typeof users);
 
   const handleIncrease = (id) => {
     dispatch(updateQuantity({ itemId: id, change: 1 }));

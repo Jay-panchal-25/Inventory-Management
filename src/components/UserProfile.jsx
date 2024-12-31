@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import authService from "../appwrite/auth";
 import userService from "../appwrite/userMethod";
 
+import UserCart from "./UserCart";
 function UserProfile() {
   const [matchedUsers, setMatchedUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,8 +28,6 @@ function UserProfile() {
         const matchedUsersList = allUserDocuments.filter(
           (user) => user.email === currentUserEmail
         );
-
-        console.log("Matched users:", matchedUsersList);
 
         setMatchedUsers(matchedUsersList);
 
@@ -75,6 +74,7 @@ function UserProfile() {
   if (loading) {
     return <p className="text-center text-gray-500">Loading user data...</p>;
   }
+  console.log(matchedUsers);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
@@ -83,6 +83,7 @@ function UserProfile() {
       </h1>
       {matchedUsers.length > 0 ? (
         <div>
+          {/* <UserCart users={matchedUsers} /> */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">
               Name:
@@ -99,7 +100,6 @@ function UserProfile() {
               <strong className="text-gray-800">{formData.name}</strong>
             )}
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">
               Email:
@@ -129,10 +129,9 @@ function UserProfile() {
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             ) : (
-              <p className="text-gray-800">{formData.password}</p>
+              <p className="text-gray-800">********</p>
             )}
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">
               Address:
@@ -149,7 +148,6 @@ function UserProfile() {
               <p className="text-gray-800">{formData.address}</p>
             )}
           </div>
-
           <div className="flex space-x-4">
             <button
               onClick={handleEditClick}
