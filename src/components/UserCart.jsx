@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateQuantity, removeFromCart } from "../store/itemSlice"; // Adjust path as needed
-
-function UserCart({ users }) {
+import authService from "../appwrite/auth";
+import userService from "../appwrite/userMethod";
+function UserCart() {
+  const [matchedUsers, setMatchedUsers] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
-  console.log("Users passed to UserCart:", typeof users);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        const allUsers = await userService.getAllUser();
+
+        const currentUserEmail = currentUser.email;
+        const allUserDocuments = allUsers.documents;
+
+        const matchedUsersList = allUserDocuments.filter(
+          (user) => user.email === currentUserEmail
+        );
+
+        console.log("Matched users:", matchedUsersList);
+
+        setMatchedUsers(matchedUsersList);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleIncrease = (id) => {
     dispatch(updateQuantity({ itemId: id, change: 1 }));
@@ -23,11 +48,12 @@ function UserCart({ users }) {
     (total, item) => total + item.price * item.quantity,
     0
   );
-
+  console.log(matchedUsers);
+  const user = matchedUsers[0];
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-4xl font-bold text-center mb-8">
-        Your Shopping Cart
+        {` Shopping Cart`}
       </h2>
 
       {cartItems.length > 0 ? (
@@ -85,6 +111,7 @@ function UserCart({ users }) {
           {/* Bill Summary Section */}
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-2xl font-bold mb-4">Bill Summary</h3>
+
             <div className="space-y-4">
               {cartItems.map((item) => (
                 <div

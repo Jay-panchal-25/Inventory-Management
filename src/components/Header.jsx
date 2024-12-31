@@ -15,11 +15,11 @@ function Header() {
         </div>
         {isLoggedIn ? (
           <nav className="hidden md:flex space-x-6">
+            <Link to="/dashboard" className="hover:text-gray-300">
+              Dashboard
+            </Link>
             {role === "admin" && (
               <>
-                <Link to="/dashboard" className="hover:text-gray-300">
-                  Dashboard
-                </Link>
                 <Link to="/addItem" className="hover:text-gray-300">
                   Add Item
                 </Link>

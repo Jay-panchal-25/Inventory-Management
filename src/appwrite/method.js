@@ -92,7 +92,7 @@ export class DataBaseService {
     try {
       return await this.databases.listDocuments(
         config.appwriteDatabaseId,
-        config.appwriteItemCollectionId // Omit the queries parameter if not needed
+        config.appwriteItemCollectionId
       );
     } catch (error) {
       console.log("Appwrite service :: GetPosts :: error", error);
