@@ -16,7 +16,7 @@ import Logout from "./components/Logout.jsx";
 import UserList from "./components/UserList.jsx";
 import UserCart from "./components/UserCart.jsx";
 import UserProfile from "./components/UserProfile.jsx";
-import OrderList from "./components/Orderlist.jsx";
+import OrderList from "./components/OrderList.jsx";
 
 const router = createBrowserRouter([
   {
