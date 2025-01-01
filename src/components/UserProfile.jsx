@@ -11,8 +11,7 @@ function UserProfile() {
     email: "",
     address: "",
   });
-
-  console.log(matchedUsers);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,8 +27,6 @@ function UserProfile() {
           (user) => user.email === currentUserEmail
         );
 
-        console.log("Matched users:", matchedUsersList);
-
         setMatchedUsers(matchedUsersList);
 
         if (matchedUsersList.length > 0) {
@@ -42,7 +39,7 @@ function UserProfile() {
           });
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        setError("Error fetching user data. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -60,26 +57,43 @@ function UserProfile() {
     setIsEditing(!isEditing);
   };
 
-  async function handleSave(id) {
+  const handleSave = async () => {
+    // Basic validation
+    if (!formData.name || !formData.address) {
+      setError("Name and Address are required.");
+      return;
+    }
+
     try {
-      await userService.updateUser(id, formData);
+      await userService.updateUser(formData.id, formData);
       alert("Profile updated successfully!");
       setIsEditing(false);
+      setError(null);
     } catch (error) {
-      console.error("Error updating user data:", error);
-      alert("Failed to update profile.");
+      setError("Failed to update profile. Please try again.");
     }
-  }
+  };
 
   if (loading) {
-    return <p className="text-center text-gray-500">Loading user data...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin ml-4" />
+      </div>
+    );
   }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
       <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-        Matched User Profiles
+        User Profile
       </h1>
+
+      {error && (
+        <div className="mb-4 text-red-500">
+          <p>{error}</p>
+        </div>
+      )}
+
       {matchedUsers.length > 0 ? (
         <div>
           <div className="mb-4">
@@ -103,17 +117,7 @@ function UserProfile() {
             <label className="block text-gray-700 font-medium mb-2">
               Email:
             </label>
-            {isEditing ? (
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            ) : (
-              <p className="text-gray-800">{formData.email}</p>
-            )}
+            <p className="text-gray-800">{formData.email}</p>
           </div>
 
           <div className="mb-4">
@@ -142,7 +146,7 @@ function UserProfile() {
             </button>
             {isEditing && (
               <button
-                onClick={() => handleSave(formData.id)}
+                onClick={handleSave}
                 className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300"
               >
                 Save Changes

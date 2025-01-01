@@ -10,7 +10,11 @@ function UserList() {
     const fetchUsers = async () => {
       try {
         const response = await userService.getAllUser();
-        setUsers(response.documents);
+        if (response && response.documents) {
+          setUsers(response.documents);
+        } else {
+          setError("No users found.");
+        }
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch users. Please try again.");
@@ -19,12 +23,12 @@ function UserList() {
     };
 
     fetchUsers();
-  }, []); // Added empty dependency array to avoid infinite loop
+  }, []);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen text-xl font-medium">
-        Loading...
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin ml-4" />
       </div>
     );
   }
@@ -51,8 +55,8 @@ function UserList() {
             >
               <h3 className="text-xl font-bold text-gray-700">{user.name}</h3>
               <p className="text-gray-600">Email: {user.email}</p>
-              <p className="text-gray-600">Password: {user.password}</p>
               <p className="text-gray-600">Address: {user.address}</p>
+              <p className="text-gray-600">Password: [Hidden for security]</p>
             </div>
           ))}
         </div>

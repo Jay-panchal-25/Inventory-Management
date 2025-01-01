@@ -11,13 +11,11 @@ function AddItem({ item }) {
     name: item?.name || "",
     quantity: item?.quantity || "",
     itemImage: null,
-    itemImagePreview: item?.itemImage
-      ? service.getFilePreview(item.$id) // Preview for existing image
-      : null,
+    itemImagePreview: item?.itemImage ? service.getFilePreview(item.$id) : null,
     price: item?.price || "",
   });
 
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +31,7 @@ function AddItem({ item }) {
       setFormData((prevData) => ({
         ...prevData,
         itemImage: file,
-        itemImagePreview: URL.createObjectURL(file), // Local preview
+        itemImagePreview: URL.createObjectURL(file),
       }));
     }
   };
@@ -42,46 +40,40 @@ function AddItem({ item }) {
     e.preventDefault();
     const { name, quantity, itemImage, price } = formData;
 
-    setLoading(true); // Show loader
+    setLoading(true);
 
     try {
-      let imageUrl = item?.itemImage; // Use existing URL if no new image
+      let imageUrl = item?.itemImage;
 
       if (itemImage) {
-        console.log("uploading image" + itemImage);
-
         const uploadedImage = await service.uploadFile(itemImage);
-        imageUrl = service.getFilePreview(uploadedImage.$id); // Get file preview URL
+        imageUrl = service.getFilePreview(uploadedImage.$id);
 
-        // Delete the old image if the item exists
         if (item && item.itemImage) {
           await service.deleteFile(itemImage.name);
         }
       }
 
       if (item) {
-        // Update an existing item
         await service.updateItem(item.$id, {
           name,
           quantity,
-          itemImage: imageUrl, // Save URL in the database
+          itemImage: imageUrl,
           price,
           itemId: item.itemId,
         });
         alert("Item updated successfully!");
       } else {
-        // Add a new item
         await service.addItem({
           name,
           quantity,
-          itemImage: imageUrl, // Save URL in the database
+          itemImage: imageUrl,
           itemId: ID.unique(),
           price,
         });
         alert("Item added successfully!");
       }
 
-      // Reset form after successful submission
       setFormData({
         name: "",
         quantity: "",
@@ -93,22 +85,22 @@ function AddItem({ item }) {
       console.error("Error during form submission:", error.response || error);
       alert("Failed to submit the form. Please try again.");
     } finally {
-      setLoading(false); // Hide loader
+      setLoading(false);
     }
   };
 
   return (
     <>
       {isLoggedIn ? (
-        <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-700">
+        <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md sm:p-8 md:mt-10">
+          <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
             {item ? "Update Item" : "Add New Item"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-600"
+                className="block text-sm font-medium text-gray-700"
               >
                 Item Name
               </label>
@@ -119,14 +111,14 @@ function AddItem({ item }) {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             <div>
               <label
                 htmlFor="quantity"
-                className="block text-sm font-medium text-gray-600"
+                className="block text-sm font-medium text-gray-700"
               >
                 Quantity
               </label>
@@ -137,14 +129,14 @@ function AddItem({ item }) {
                 value={formData.quantity}
                 onChange={handleChange}
                 required
-                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             <div>
               <label
                 htmlFor="itemImage"
-                className="block text-sm font-medium text-gray-600"
+                className="block text-sm font-medium text-gray-700"
               >
                 Item Image
               </label>
@@ -154,14 +146,14 @@ function AddItem({ item }) {
                 name="itemImage"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               {formData.itemImagePreview && (
                 <div className="mt-4">
                   <img
                     src={formData.itemImagePreview}
                     alt="Item Preview"
-                    className="w-32 h-32 object-cover rounded-md"
+                    className="w-32 h-32 object-cover rounded-md shadow-md"
                   />
                 </div>
               )}
@@ -170,7 +162,7 @@ function AddItem({ item }) {
             <div>
               <label
                 htmlFor="price"
-                className="block text-sm font-medium text-gray-600"
+                className="block text-sm font-medium text-gray-700"
               >
                 Price
               </label>
@@ -181,22 +173,22 @@ function AddItem({ item }) {
                 value={formData.price}
                 onChange={handleChange}
                 required
-                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center">
               <button
                 type="submit"
-                className={`px-6 py-2 rounded-md text-white focus:outline-none ${
+                className={`w-full sm:w-auto px-6 py-2 text-white rounded-md focus:outline-none ${
                   item
-                    ? "bg-green-500 hover:bg-green-600"
-                    : "bg-blue-500 hover:bg-blue-600"
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-blue-600 hover:bg-blue-700"
                 }`}
-                disabled={loading} // Disable button during loading
+                disabled={loading}
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin mx-auto"></div>
                 ) : item ? (
                   "Update Item"
                 ) : (

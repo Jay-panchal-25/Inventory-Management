@@ -4,39 +4,47 @@ import userService from "../appwrite/userMethod";
 import { Link, useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState(""); // Address field
-
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    address: "",
+  });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    try {
-      await authService.createAccount({
-        name,
-        email,
-        password,
-      });
+    const { name, email, password, address } = formData;
 
-      const userData = await userService.addUser({
-        name,
-        email,
-        address,
-        password,
-      });
+    if (!name || !email || !password || !address) {
+      setError("All fields are required");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Create an account in auth service
+      await authService.createAccount({ name, email, password });
+
+      // Add user details to the database
+      const userData = await userService.addUser({ name, email, address });
 
       if (userData) {
         navigate("/login");
       }
     } catch (err) {
-      setError(err?.message || "Failed to create account");
+      const errorMessage = err?.message || "Failed to create account";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -48,54 +56,34 @@ const SignupPage = () => {
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSignup}>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+          {/** Full Name Input */}
+          <InputField
+            id="name"
+            label="Full Name"
+            value={formData.name}
+            onChange={handleChange}
+            type="text"
+            required
+          />
+          {/** Email Input */}
+          <InputField
+            id="email"
+            label="Email"
+            value={formData.email}
+            onChange={handleChange}
+            type="email"
+            required
+          />
+          {/** Password Input */}
+          <InputField
+            id="password"
+            label="Password"
+            value={formData.password}
+            onChange={handleChange}
+            type="password"
+            required
+          />
+          {/** Address Select */}
           <div className="mb-6">
             <label
               htmlFor="address"
@@ -105,8 +93,8 @@ const SignupPage = () => {
             </label>
             <select
               id="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              value={formData.address}
+              onChange={handleChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
@@ -117,7 +105,6 @@ const SignupPage = () => {
               <option value="Vadodara">Vadodara</option>
             </select>
           </div>
-          {/* Role selection */}
 
           <button
             type="submit"
@@ -139,5 +126,21 @@ const SignupPage = () => {
     </div>
   );
 };
+
+const InputField = ({ id, label, value, onChange, type, required }) => (
+  <div className="mb-4">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+      {label}
+    </label>
+    <input
+      type={type}
+      id={id}
+      value={value}
+      onChange={onChange}
+      className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      required={required}
+    />
+  </div>
+);
 
 export default SignupPage;

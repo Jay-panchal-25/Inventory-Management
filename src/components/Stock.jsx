@@ -14,8 +14,8 @@ function Stock() {
     setError(null);
     try {
       const result = await service.getAllItems();
-
-      if (result) {
+      console.log(result);
+      if (result && result.documents) {
         setItems(result.documents);
       } else {
         setError("Failed to fetch items.");
@@ -34,13 +34,15 @@ function Stock() {
   };
 
   useEffect(() => {
-    fetchItems();
-  }, []);
+    if (isLoggedIn) {
+      fetchItems();
+    }
+  }, [isLoggedIn]); // Re-fetch items if login status changes
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin" />
+        <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin ml-4" />
       </div>
     );
   }
@@ -48,14 +50,22 @@ function Stock() {
   if (error) {
     return (
       <div className="text-center text-red-500">
-        <p>Error: {error}</p>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (!items.length) {
+    return (
+      <div className="text-center text-gray-600">
+        <p>No items available.</p>
       </div>
     );
   }
 
   return (
     <>
-      {isLoggedIn ? (
+      {isLoggedIn && (
         <div className="p-4">
           <h2 className="text-xl font-semibold pb-4">
             Total Items: {items.length}
@@ -68,7 +78,7 @@ function Stock() {
             ))}
           </div>
         </div>
-      ) : null}
+      )}
     </>
   );
 }

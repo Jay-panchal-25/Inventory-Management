@@ -32,7 +32,11 @@ function UserCart() {
 
     fetchData();
   }, []);
-  const user = matchedUsers[0];
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    setUser(matchedUsers[0]);
+  });
+
   const handleIncrease = (id) => {
     dispatch(updateQuantity({ itemId: id, change: 1 }));
   };
