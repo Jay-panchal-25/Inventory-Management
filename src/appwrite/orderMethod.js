@@ -7,7 +7,7 @@ class orderMethod {
     .setProject(config.appwriteProjectId);
 
   databases = new Databases(this.client);
-  async addOrder({ userId, userName, orderItem, totalPrice }) {
+  async addOrder({ userId, userName, orderItem, totalPrice, orderAddress }) {
     const docId = ID.unique();
     try {
       const result = await this.databases.createDocument(
@@ -20,6 +20,7 @@ class orderMethod {
           userName,
           orderItem,
           totalPrice,
+          orderAddress,
         }
       );
       console.log("order added successfully:", result);

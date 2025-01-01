@@ -64,6 +64,7 @@ function UserCart() {
       await orderService.addOrder({
         userId: user.$id,
         userName: user.name,
+        orderAddress: user.address,
         orderItem,
         totalPrice,
       });
