@@ -7,13 +7,7 @@ class orderMethod {
     .setProject(config.appwriteProjectId);
 
   databases = new Databases(this.client);
-  async addOrder({
-    userId,
-    userName,
-    orderItem,
-
-    totalPrice,
-  }) {
+  async addOrder({ userId, userName, orderItem, totalPrice }) {
     const docId = ID.unique();
     try {
       const result = await this.databases.createDocument(
@@ -25,7 +19,6 @@ class orderMethod {
           userId,
           userName,
           orderItem,
-
           totalPrice,
         }
       );
@@ -34,6 +27,21 @@ class orderMethod {
       return result;
     } catch (error) {
       console.log("addOrder error: " + error);
+      throw error;
+    }
+  }
+
+  async deleteOrder(id) {
+    try {
+      const result = await this.databases.deleteDocument(
+        config.appwriteDatabaseId,
+        config.appwriteOrderCollectionId,
+        id
+      );
+      console.log("order deleted successfully:", result);
+      return result;
+    } catch (error) {
+      console.log("deleteOrder error: " + error);
       throw error;
     }
   }

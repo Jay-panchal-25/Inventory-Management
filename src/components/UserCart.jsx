@@ -46,27 +46,25 @@ function UserCart() {
   };
 
   const handleCheckout = async () => {
-    // Ensure we have the current user
-
-    // Create an array of order items with name, quantity, and price
     const allOrderItems = cartItems.map((item) => ({
       name: item.name,
       quantity: item.quantity,
       price: item.price,
     }));
-    const orderItems = allOrderItems.map((item) => JSON.stringify(item));
+    const orderItem = allOrderItems.map((item) => JSON.stringify(item));
+
     // Calculate the total price
     const totalPrice = cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
-    console.log(orderItems);
+
     // Call the order service to add the order to the database
     try {
       await orderService.addOrder({
         userId: user.$id,
         userName: user.name,
-        orderItems,
+        orderItem,
         totalPrice,
       });
       alert("Order successfully placed! Proceeding to checkout.");
