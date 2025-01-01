@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -26,7 +26,7 @@ function Header() {
                 <Link to="/stock" className="hover:text-gray-300">
                   Stock & Items
                 </Link>
-                <Link to="/" className="hover:text-gray-300">
+                <Link to="/orderList" className="hover:text-gray-300">
                   Order List
                 </Link>
                 <Link to="/userList" className="hover:text-gray-300">

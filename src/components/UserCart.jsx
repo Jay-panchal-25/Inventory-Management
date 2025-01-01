@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateQuantity, removeFromCart } from "../store/itemSlice"; // Adjust path as needed
 import authService from "../appwrite/auth";
 import userService from "../appwrite/userMethod";
+import orderService from "../appwrite/orderMethod";
+
 function UserCart() {
   const [matchedUsers, setMatchedUsers] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -22,8 +24,6 @@ function UserCart() {
           (user) => user.email === currentUserEmail
         );
 
-        console.log("Matched users:", matchedUsersList);
-
         setMatchedUsers(matchedUsersList);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -32,28 +32,59 @@ function UserCart() {
 
     fetchData();
   }, []);
-
+  const user = matchedUsers[0];
   const handleIncrease = (id) => {
     dispatch(updateQuantity({ itemId: id, change: 1 }));
   };
 
-  const handleDecrease = (id) =>
+  const handleDecrease = (id) => {
     dispatch(updateQuantity({ itemId: id, change: -1 }));
+  };
 
   const handleRemove = (id) => {
     dispatch(removeFromCart(id));
+  };
+
+  const handleCheckout = async () => {
+    // Ensure we have the current user
+
+    // Create an array of order items with name, quantity, and price
+    const allOrderItems = cartItems.map((item) => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+    }));
+    const orderItems = allOrderItems.map((item) => JSON.stringify(item));
+    // Calculate the total price
+    const totalPrice = cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+    console.log(orderItems);
+    // Call the order service to add the order to the database
+    try {
+      await orderService.addOrder({
+        userId: user.$id,
+        userName: user.name,
+        orderItems,
+        totalPrice,
+      });
+      alert("Order successfully placed! Proceeding to checkout.");
+    } catch (error) {
+      console.error("Error placing the order:", error);
+      alert("Failed to place the order.");
+    }
   };
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-  console.log(matchedUsers);
-  const user = matchedUsers[0];
+
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-4xl font-bold text-center mb-8">
-        {` Shopping Cart`}
+        {user ? `${user.name}'s Shopping Cart` : "Your Shopping Cart"}
       </h2>
 
       {cartItems.length > 0 ? (
@@ -134,7 +165,7 @@ function UserCart() {
 
             <button
               className="w-full mt-6 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600"
-              onClick={() => alert("Proceeding to Checkout")}
+              onClick={handleCheckout}
             >
               Checkout
             </button>

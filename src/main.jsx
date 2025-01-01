@@ -16,6 +16,7 @@ import Logout from "./components/Logout.jsx";
 import UserList from "./components/UserList.jsx";
 import UserCart from "./components/UserCart.jsx";
 import UserProfile from "./components/UserProfile.jsx";
+import OrderList from "./components/Orderlist.jsx";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: "/userProfile",
         element: <UserProfile />,
+      },
+      {
+        path: "/orderList",
+        element: <OrderList />,
       },
     ],
   },
