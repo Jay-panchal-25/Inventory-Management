@@ -14,7 +14,7 @@ function Header() {
         {/* Logo */}
         <div className="text-2xl font-bold">
           <Link to="/" className="hover:text-gray-300">
-            MyInventory
+            Inventory Management System
           </Link>
         </div>
 
