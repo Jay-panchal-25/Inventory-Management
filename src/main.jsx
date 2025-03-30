@@ -17,12 +17,17 @@ import UserList from "./components/UserList.jsx";
 import UserCart from "./components/UserCart.jsx";
 import UserProfile from "./components/UserProfile.jsx";
 import OrderList from "./components/OrderList.jsx";
+import Landing from "./components/Landing.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "",
+        element: <Landing />,
+      },
       {
         path: "/signup",
         element: <SignupPage />,

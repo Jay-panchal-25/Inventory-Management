@@ -55,12 +55,12 @@ function ItemCard({ item, onUpdate, onDelete }) {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="max-w-sm rounded-lg overflow-hidden shadow-md border border-gray-200 bg-white">
+    <div className="flex justify-center items-center w-full">
+      <div className="w-80 rounded-lg overflow-hidden  text-center">
         {/* Item Image */}
-        <div className="w-full h-60">
+        <div className="w-full h-60 flex justify-center items-center ">
           <img
-            className="w-full h-full object-cover p-2"
+            className="max-h-full max-w-full object-cover p-2"
             src={itemImage}
             alt={name}
           />
@@ -69,10 +69,12 @@ function ItemCard({ item, onUpdate, onDelete }) {
         {/* Item Details */}
         <div className="p-4">
           <h2 className="font-bold text-xl text-gray-800">{name}</h2>
-          <p className="text-gray-600 mt-2">Price: ₹{price}</p>
-          {role === "admin" && (
-            <p className="text-gray-600 mt-1">Quantity: {quantity}</p>
-          )}
+          <div className="flex space-x-4 justify-center mt-3">
+            <p className="text-gray-600 ">Price: ₹{price}</p>
+            {role === "admin" && (
+              <p className="text-gray-600 ">Quantity: {quantity}</p>
+            )}
+          </div>
         </div>
 
         {/* Action Buttons */}

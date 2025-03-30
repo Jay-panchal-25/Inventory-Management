@@ -15,9 +15,9 @@ function UserList() {
         } else {
           setError("No users found.");
         }
-        setLoading(false);
       } catch (err) {
         setError("Failed to fetch users. Please try again.");
+      } finally {
         setLoading(false);
       }
     };
@@ -28,7 +28,7 @@ function UserList() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin ml-4" />
+        <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin" />
       </div>
     );
   }
@@ -47,18 +47,30 @@ function UserList() {
         User List
       </h2>
       {users && users.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {users.map((user) => (
-            <div
-              key={user.$id}
-              className="border border-gray-300 rounded-lg shadow-md p-6 space-y-4 bg-white"
-            >
-              <h3 className="text-xl font-bold text-gray-700">{user.name}</h3>
-              <p className="text-gray-600">Email: {user.email}</p>
-              <p className="text-gray-600">Address: {user.address}</p>
-              <p className="text-gray-600">Password: [Hidden for security]</p>
-            </div>
-          ))}
+        <div className="overflow-x-auto shadow-lg rounded-lg">
+          <table className="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
+            <thead className="bg-gray-200 text-gray-700">
+              <tr className="transition-all duration-300">
+                <th className="py-3 px-6 text-left">Name</th>
+                <th className="py-3 px-6 text-left">Email</th>
+                <th className="py-3 px-6 text-left">Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr
+                  key={user.$id}
+                  className={`border-b border-gray-200 transition-transform duration-300 hover:bg-gray-100 hover:scale-[1.02] ${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  }`}
+                >
+                  <td className="py-3 px-6">{user.name}</td>
+                  <td className="py-3 px-6">{user.email}</td>
+                  <td className="py-3 px-6">{user.address}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <p className="text-center text-lg text-gray-600">No users available</p>

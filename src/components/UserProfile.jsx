@@ -58,7 +58,6 @@ function UserProfile() {
   };
 
   const handleSave = async () => {
-    // Basic validation
     if (!formData.name || !formData.address) {
       setError("Name and Address are required.");
       return;
@@ -83,20 +82,20 @@ function UserProfile() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6 transition-all duration-300 ease-in-out transform hover:scale-105">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
         User Profile
       </h1>
 
       {error && (
-        <div className="mb-4 text-red-500">
+        <div className="mb-4 text-red-500 text-center">
           <p>{error}</p>
         </div>
       )}
 
       {matchedUsers.length > 0 ? (
-        <div>
-          <div className="mb-4">
+        <div className="space-y-4">
+          <div>
             <label className="block text-gray-700 font-medium mb-2">
               Name:
             </label>
@@ -106,21 +105,25 @@ function UserProfile() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
               />
             ) : (
-              <strong className="text-gray-800">{formData.name}</strong>
+              <p className="text-gray-800 bg-gray-100 p-2 rounded-lg">
+                {formData.name}
+              </p>
             )}
           </div>
 
-          <div className="mb-4">
+          <div>
             <label className="block text-gray-700 font-medium mb-2">
               Email:
             </label>
-            <p className="text-gray-800">{formData.email}</p>
+            <p className="text-gray-800 bg-gray-100 p-2 rounded-lg">
+              {formData.email}
+            </p>
           </div>
 
-          <div className="mb-4">
+          <div>
             <label className="block text-gray-700 font-medium mb-2">
               Address:
             </label>
@@ -130,24 +133,26 @@ function UserProfile() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
               />
             ) : (
-              <p className="text-gray-800">{formData.address}</p>
+              <p className="text-gray-800 bg-gray-100 p-2 rounded-lg">
+                {formData.address}
+              </p>
             )}
           </div>
 
-          <div className="flex space-x-4">
+          <div className="flex justify-center space-x-4 mt-4">
             <button
               onClick={handleEditClick}
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out transform hover:scale-105"
             >
-              {isEditing ? "Cancel Edit" : "Edit Profile"}
+              {isEditing ? "Cancel" : "Edit Profile"}
             </button>
             {isEditing && (
               <button
                 onClick={handleSave}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300"
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 ease-in-out transform hover:scale-105"
               >
                 Save Changes
               </button>

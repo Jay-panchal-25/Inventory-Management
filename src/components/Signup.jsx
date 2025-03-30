@@ -51,9 +51,8 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:w-96">
-        <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
+    <div className=" flex items-center justify-center bg-gray-100">
+      <div className="bg-white rounded-lg  w-full sm:w-96">
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSignup}>
           {/** Full Name Input */}
@@ -114,14 +113,14 @@ const SignupPage = () => {
             {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
-        <div className="mt-4 text-center">
+        {/* <div className="mt-4 text-center">
           <p className="text-sm">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-500 hover:underline">
               Login
             </Link>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

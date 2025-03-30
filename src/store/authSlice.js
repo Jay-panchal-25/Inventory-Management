@@ -21,7 +21,7 @@ const authSlice = createSlice({
         role: "admin",
       };
 
-      if (user && email === "admin@example.com" && password === "password123") {
+      if (user && email === "admin@gmail.com" && password === "password123") {
         // Admin login logic
         state.user = { email: admin.email, role: "admin" };
         state.isLoggedIn = true;

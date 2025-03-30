@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function AddItem({ item }) {
   const { isLoggedIn } = useSelector((state) => state.auth);
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: item?.name || "",
     quantity: item?.quantity || "",
@@ -72,6 +72,7 @@ function AddItem({ item }) {
           price,
         });
         alert("Item added successfully!");
+        navigate("/stock");
       }
 
       setFormData({
@@ -92,7 +93,7 @@ function AddItem({ item }) {
   return (
     <>
       {isLoggedIn ? (
-        <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md sm:p-8 md:mt-10">
+        <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md sm:p-8 md:mt-10  border-t-4 border-blue-500">
           <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
             {item ? "Update Item" : "Add New Item"}
           </h2>
@@ -188,7 +189,7 @@ function AddItem({ item }) {
                 disabled={loading}
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin mx-auto"></div>
+                  <div className=""> Processing...</div>
                 ) : item ? (
                   "Update Item"
                 ) : (
