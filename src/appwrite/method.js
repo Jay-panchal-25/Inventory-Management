@@ -126,9 +126,9 @@ export class DataBaseService {
 
   getFilePreview(fileId) {
     try {
-      return this.bucket.getFilePreview(config.appwriteBucketId, fileId);
+      return this.bucket.getFileView(config.appwriteBucketId, fileId);
     } catch (error) {
-      throw error;
+      console.error("Error getting file view:", error);
       return false;
     }
   }
