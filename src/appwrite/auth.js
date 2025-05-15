@@ -14,14 +14,8 @@ export class AuthService {
   }
 
   async createAccount({ email, password, name }) {
-    var uid = ID.unique();
     try {
-      const userAccount = await this.account.create(
-        ID.unique(),
-        email,
-        password,
-        name
-      );
+      await this.account.create(ID.unique(), email, password, name);
     } catch (error) {
       console.error("Error creating account:", error);
       throw error;
@@ -30,10 +24,16 @@ export class AuthService {
 
   async login({ email, password }) {
     try {
-      return await this.account.createEmailPasswordSession(email, password);
-    } catch (error) {
-      throw error;
+      // Check current session first
+      await this.getCurrentUser();
+      // If user exists, logout first to clear old session
+      await this.logout();
+    } catch {
+      // No current user session, safe to continue
     }
+
+    // Now create new session
+    return await this.account.createEmailPasswordSession(email, password);
   }
 
   async getCurrentUser() {

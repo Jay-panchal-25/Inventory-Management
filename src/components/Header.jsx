@@ -123,16 +123,18 @@ function Header() {
         </nav>
 
         {/* Mobile Menu Toggle */}
-        <button
-          className="md:hidden text-gray-300 focus:outline-none"
-          onClick={toggleMenu}
-        >
-          {isMenuOpen ? (
-            <FaTimes className="text-2xl" />
-          ) : (
-            <FaBars className="text-2xl" />
-          )}
-        </button>
+        {isLoggedIn && (
+          <button
+            className="md:hidden text-gray-300 focus:outline-none"
+            onClick={toggleMenu}
+          >
+            {isMenuOpen ? (
+              <FaTimes className="text-2xl" />
+            ) : (
+              <FaBars className="text-2xl" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Mobile Navigation */}

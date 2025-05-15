@@ -68,7 +68,6 @@ class userMethod {
   }
 
   async getUsers(docId) {
-    console.log("getUsers id", docId);
     try {
       return await this.databases.getDocument(
         config.appwriteDatabaseId,

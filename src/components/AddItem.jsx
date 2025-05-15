@@ -3,10 +3,12 @@ import service from "../appwrite/method";
 import { ID } from "appwrite";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; // ✅ Added for toasts
 
 function AddItem({ item }) {
   const { isLoggedIn } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: item?.name || "",
     quantity: item?.quantity || "",
@@ -62,7 +64,7 @@ function AddItem({ item }) {
           price,
           itemId: item.itemId,
         });
-        alert("Item updated successfully!");
+        toast.success("Item updated successfully!"); // ✅ Toast
       } else {
         await service.addItem({
           name,
@@ -71,7 +73,7 @@ function AddItem({ item }) {
           itemId: ID.unique(),
           price,
         });
-        alert("Item added successfully!");
+        toast.success("Item added successfully!"); // ✅ Toast
         navigate("/stock");
       }
 
@@ -84,7 +86,7 @@ function AddItem({ item }) {
       });
     } catch (error) {
       console.error("Error during form submission:", error.response || error);
-      alert("Failed to submit the form. Please try again.");
+      toast.error("Failed to submit the form. Please try again."); // ✅ Toast
     } finally {
       setLoading(false);
     }
@@ -93,7 +95,7 @@ function AddItem({ item }) {
   return (
     <>
       {isLoggedIn ? (
-        <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md sm:p-8 md:mt-10  border-t-4 border-blue-500">
+        <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md sm:p-8 md:mt-10 border-t-4 border-blue-500">
           <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
             {item ? "Update Item" : "Add New Item"}
           </h2>

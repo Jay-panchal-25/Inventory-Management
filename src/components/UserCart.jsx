@@ -4,6 +4,7 @@ import { updateQuantity, removeFromCart, clearCart } from "../store/itemSlice";
 import authService from "../appwrite/auth";
 import userService from "../appwrite/userMethod";
 import orderService from "../appwrite/orderMethod";
+import toast from "react-hot-toast";
 
 function UserCart() {
   const [matchedUsers, setMatchedUsers] = useState([]);
@@ -59,7 +60,7 @@ function UserCart() {
         orderItem: orderItems,
         totalPrice,
       });
-      alert("Order placed successfully!");
+      toast.success("Order placed successfully!");
       dispatch(clearCart());
     } catch (error) {
       console.error("Error placing order:", error);

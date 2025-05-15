@@ -13,17 +13,40 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isFlipped, setIsFlipped] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
     try {
-      dispatch(authLogin({ email, password }));
       await authService.login({ email, password });
+
+      const user = await authService.getCurrentUser();
+
+      if (user) {
+        dispatch(
+          authLogin({
+            user: {
+              name: user.name,
+              email: user.email,
+              $id: user.$id,
+            },
+          })
+        );
+      } else {
+        setError("Unable to get user info.");
+      }
     } catch (err) {
-      setError("Invalid credentials");
+      console.error("Login failed:", err);
+      setError("Invalid email or password.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,6 +89,7 @@ const Login = () => {
                   className="p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Enter your email"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -84,26 +108,30 @@ const Login = () => {
                   className="p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Enter your password"
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="px-3 text-gray-500 focus:outline-none"
+                  disabled={isLoading}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? "🙈" : "👁️"}
                 </button>
               </div>
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-800 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
+              className="w-full bg-blue-800 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300 disabled:opacity-50"
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
           <div className="mt-4 text-center">
             <p className="text-sm">
-              Don't have an account?
+              Don't have an account?{" "}
               <span
                 onClick={() => setIsFlipped(true)}
                 className="text-indigo-600 hover:underline cursor-pointer"
@@ -122,10 +150,10 @@ const Login = () => {
           <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
             Sign Up
           </h2>
-          <Signup />
+          <Signup onSignupSuccess={() => setIsFlipped(false)} />
           <div className="text-center mt-4">
             <p className="text-sm">
-              If you have an account?
+              If you have an account?{" "}
               <span
                 onClick={() => setIsFlipped(false)}
                 className="text-indigo-600 hover:underline cursor-pointer"
